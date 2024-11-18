@@ -1,0 +1,45 @@
+# Ignore IntelliJ IDEA project-specific files
+/.idea/              # IntelliJ project folder (ignore entire folder)
+/.idea/*             # Ignore all files in .idea folder
+*.iws                # IntelliJ workspace file
+*.iml                # IntelliJ module file
+*.ipr                # IntelliJ project file
+out/                 # IntelliJ build output (if any)
+!**/src/main/**/out/  # Don't ignore out directories for source files
+
+# Ignore Gradle-related files and directories
+.gradle/             # Gradle caches
+/build/              # Build output
+!gradle/wrapper/gradle-wrapper.jar  # Include the Gradle wrapper
+!**/src/main/**/build/  # Don't ignore build folders in the main source
+!**/src/test/**/build/  # Don't ignore build folders in test source
+
+# Spring Tool Suite specific
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# Ignore system-specific files (macOS, Windows)
+.DS_Store           # macOS Finder metadata
+Thumbs.db           # Windows thumbnail cache
+
+# Ignore any IDE-specific or local environment-specific files from other IDEs (NetBeans, VS Code)
+.nbproject/private/ # NetBeans private files
+/nbbuild/           # NetBeans build files
+/dist/              # NetBeans distribution files
+/nbdist/            # NetBeans distribution files
+/.vscode/           # VS Code settings directory
+
+# Ignore local storage files related to data sources (e.g., for IDEs or services like databases)
+.dataSources/
+.dataSources.local.xml
+
+# Ignore HTTP client requests in IntelliJ
+/httpRequests/
