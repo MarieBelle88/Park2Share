@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CO3_Park2Share</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+
+
 </resources>
