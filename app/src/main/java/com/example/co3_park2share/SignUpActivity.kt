@@ -1,6 +1,8 @@
 package com.example.co3_park2share
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.co3_park2share.databinding.ActivitySignUpBinding
@@ -30,7 +32,9 @@ class SignUpActivity : AppCompatActivity() {
             } else {
                 // Implement sign-up logic here
                 Toast.makeText(this, "Sign-up successful!", Toast.LENGTH_SHORT).show()
-                // Navigate to Login or Dashboard
+
+                val intent = Intent(this, CarDetailsActivity::class.java)
+                startActivity(intent)
             }
         }
     }

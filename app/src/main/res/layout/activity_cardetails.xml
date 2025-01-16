@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Car Image -->
+            <ImageView
+                android:id="@+id/carImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/car" />
+
+            <!-- Brand and Model -->
+            <TextView
+                android:id="@+id/carBrandModel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Brand Model"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000" />
+
+            <!-- Capacity and Price -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <!-- Capacity -->
+                <TextView
+                    android:id="@+id/carCapacity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Capacity: 4 people"
+                    android:textSize="16sp"
+                    android:textColor="#555" />
+
+                <!-- Price -->
+                <TextView
+                    android:id="@+id/carPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="$50/day"
+                    android:textSize="16sp"
+                    android:textColor="#000"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Star Reviews -->
+            <LinearLayout
+                android:id="@+id/starRatingLayout"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+
+                <ImageView
+                    android:id="@+id/star1"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="TODO"
+                    android:src="@drawable/ic_star" />
+                <ImageView
+                    android:id="@+id/star2"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="TODO"
+                    android:src="@drawable/ic_star" />
+                <ImageView
+                    android:id="@+id/star3"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="TODO"
+                    android:src="@drawable/ic_star" />
+                <ImageView
+                    android:id="@+id/star4"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="TODO"
+                    android:src="@drawable/ic_star" />
+                <ImageView
+                    android:id="@+id/star5"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="TODO"
+                    android:src="@drawable/ic_star_half" />
+            </LinearLayout>
+
+            <!-- Book Button -->
+            <Button
+                android:id="@+id/bookButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Book Now"
+                android:backgroundTint="#FFA500"
+                android:textColor="#FFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
