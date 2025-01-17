@@ -20,5 +20,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "CO3_Park2Share"
-include(":app")
+include(":frontend")
  
