@@ -28,4 +28,8 @@ dependencies {
     implementation(libs.ktor.server.config.yaml)
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
+    implementation("org.jetbrains.exposed:exposed-core:0.43.0")
+    implementation("org.jetbrains.exposed:exposed-dao:0.43.0")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.43.0")
+    implementation("mysql:mysql-connector-java:8.0.33")
 }
