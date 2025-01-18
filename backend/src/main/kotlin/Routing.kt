@@ -124,7 +124,7 @@ fun Application.configureRouting() {
 }
 
 fun initDatabase() {
-    val dbUrl = "jdbc:mysql://localhost:3306"
+    val dbUrl = "jdbc:mysql://localhost:3306/park2share"
     val dbUser = "root"
     val dbPassword = "secret"
 
