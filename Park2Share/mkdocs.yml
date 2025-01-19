@@ -1,0 +1,41 @@
+site_name: Park2Share Documentation
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Introduction: getting-started/introduction.md
+      - Setup: getting-started/setup.md
+      - Requirements: getting-started/requirements.md
+  - Features:
+      - Car Owner Listing: features/car-owner-listing.md
+      - Traveler Search: features/traveler-search.md
+      - Secure Payment: features/secure-payment.md
+      - Reviews & Ratings: features/reviews-ratings.md
+      - Notifications: features/notifications.md
+      - Map View: features/map-view.md
+      - Photo Submissions: features/photo-submissions.md
+  - Components:
+      - Backend: components/backend.md
+      - Frontend: components/frontend.md
+      - Integrations: components/integrations.md
+      - API Structure: components/api-structure.md
+  - Deployment:
+      - Environment Setup: deployment/environment-setup.md
+      - Server Configuration: deployment/server-configuration.md
+      - Testing and Debugging: deployment/testing-and-debugging.md
+  - Development Workflow:
+      - Git Workflow: development/git-workflow.md
+      - Coding Standards: development/coding-standards.md
+      - Testing: development/testing.md
+  - User Guide:
+      - Car Owners: user-guide/owner.md
+      - Travelers: user-guide/traveler.md
+      - Profile Management: user-guide/profile-management.md
+      - Support: user-guide/support.md
+  - API Reference: api-reference.md
+  - Advanced Topics:
+      - Security: advanced-topics/security.md
+      - Scaling: advanced-topics/scaling.md
+      - Data Privacy: advanced-topics/data-privacy.md
+  - FAQ: faq.md
+  - Glossary: glossary.md
