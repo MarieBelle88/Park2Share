@@ -1,0 +1,16 @@
+*.iml
+.gradle
+.idea
+/idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+# Ignore Android build files
+/build/
+.idea/
+*.apk
+*.aar
+
