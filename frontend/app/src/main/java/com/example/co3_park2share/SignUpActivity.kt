@@ -33,8 +33,13 @@ class SignUpActivity : AppCompatActivity() {
                 // Implement sign-up logic here
                 Toast.makeText(this, "Sign-up successful!", Toast.LENGTH_SHORT).show()
 
-                val intent = Intent(this, CarDetailsActivity::class.java)
+                val intent = Intent(this, HomePageActivity::class.java)
                 startActivity(intent)
+
+                //finish()
+
+               // val intent = Intent(this, CarDetailsActivity::class.java)
+                //startActivity(intent)
             }
         }
     }

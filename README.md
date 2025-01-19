@@ -33,7 +33,7 @@ Park2Share is a revolutionary application that transforms airport parking into a
   [LinkedIn](#)  
 
 - **Martine Mirchevski**  
-  [GitHub](https://github.com/username)  
+  [GitHub](https://github.com/mrchvsk)  
   [LinkedIn](#)
 
 ## How to Run the Project
@@ -42,3 +42,6 @@ Park2Share is a revolutionary application that transforms airport parking into a
    ```bash
    git clone https://github.com/MarieBelle88/Park2Share.git
    cd Park2Share
+2. - Open the **frontend** file 
+- Sync the grandle files
+- Run the app
