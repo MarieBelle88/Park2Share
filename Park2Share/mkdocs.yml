@@ -1,5 +1,8 @@
 site_name: Park2Share Documentation
 
+theme:
+  name: material
+
 nav:
   - Home: index.md
   - Getting Started:
@@ -39,3 +42,5 @@ nav:
       - Data Privacy: advanced-topics/data-privacy.md
   - FAQ: faq.md
   - Glossary: glossary.md
+plugins:
+  - search
