@@ -36,10 +36,9 @@ class SignUpActivity : AppCompatActivity() {
                 val intent = Intent(this, HomePageActivity::class.java)
                 startActivity(intent)
 
-                //finish()
+                finish()
 
-               // val intent = Intent(this, CarDetailsActivity::class.java)
-                //startActivity(intent)
+
             }
         }
     }

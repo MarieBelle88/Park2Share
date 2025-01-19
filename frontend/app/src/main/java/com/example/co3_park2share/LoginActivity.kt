@@ -1,5 +1,6 @@
 package com.example.co3_park2share
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,9 @@ class LoginActivity : AppCompatActivity() {
                 // Implement authentication logic here
                 Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
                 // Navigate to Dashboard or another page
+                val intent = Intent(this, HomePageActivity::class.java)
+                startActivity(intent)
+                finish() // Ensure LoginActivity is removed from the backstack
             }
         }
     }

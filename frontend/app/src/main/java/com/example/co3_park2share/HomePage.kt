@@ -15,6 +15,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.content.Intent
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.platform.LocalContext
+
 
 @Composable
 fun DashboardScreen() {
@@ -40,6 +44,7 @@ fun QuickLinksSection() {
         QuickLinkCard(title = "List Your Car", icon = R.drawable.ic_launcher_foreground)
         QuickLinkCard(title = "Search for Cars", icon = R.drawable.ic_launcher_foreground)
         QuickLinkCard(title = "My Bookings", icon = R.drawable.ic_launcher_foreground)
+
     }
 }
 
@@ -100,10 +105,22 @@ fun SuggestedCarsSection() {
 
 @Composable
 fun SuggestedCarCard(carName: String, image: Int) {
+    val context = LocalContext.current // Get the current context to create an Intent
+
     Card(
         modifier = Modifier
             .width(100.dp)
-            .height(120.dp),
+            .height(120.dp)
+            .clickable {
+                // Navigate to CarDetailsActivity with the car details
+                val intent = Intent(context, CarDetailsActivity::class.java).apply {
+                    putExtra("carName", carName)
+                    putExtra("carImage", image)
+                    putExtra("carCapacity", "4 people") // Example capacity
+                    putExtra("carPrice", "$50/day") // Example price
+                }
+                context.startActivity(intent)
+            },
         elevation = 4.dp
     ) {
         Column(
@@ -120,6 +137,8 @@ fun SuggestedCarCard(carName: String, image: Int) {
         }
     }
 }
+
+
 
 @Composable
 fun MyActivitySection() {
