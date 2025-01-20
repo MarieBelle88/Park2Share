@@ -1,5 +1,8 @@
 package com.example.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Cars(
     val cid: Int,
     val uid: Int,
