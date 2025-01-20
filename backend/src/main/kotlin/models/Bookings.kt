@@ -1,13 +1,14 @@
 package com.example.models
 
-import java.sql.Date
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Bookings(
     val bid: Int,
     val cid: Int,
     val uid: Int,
-    val start: Date,
-    val end: Date,
+    val start: String,
+    val end: String,
     val total: Float,
     val status: String,
 )

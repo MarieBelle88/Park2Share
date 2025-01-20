@@ -31,10 +31,10 @@ object Booking : Table() {
     val bid = integer("bid").autoIncrement()
     val cid = integer("cid").references(Car.cid)
     val uid = integer("uid").references(User.uid)
-    val start = varchar("start", 255)
-    var end = varchar("end", 255)
+    val start = varchar("start", 50)
+    var end = varchar("end", 50)
     val total = float("total")
-    val status = varchar("isAvailable", 20)
+    val status = varchar("status", 20)
 
     override val primaryKey = PrimaryKey(bid)
 }

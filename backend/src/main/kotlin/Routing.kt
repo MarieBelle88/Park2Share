@@ -1,12 +1,8 @@
 package com.example
 
-import com.example.models.User
-import com.example.models.Car
-import com.example.models.Booking
+import com.example.models.*
 
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
-import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.request.*
@@ -15,21 +11,27 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureRouting() {
     routing {
-        // User Routes
-        route("/User") {
+
+        get("/") {
+            call.respond(mapOf("message" to "Welcome to the Park2Share API"))
+        }
+
+        route("/user") {
             get {
-                val User = transaction {
+                log.info("Handling GET request at /user")
+                val users = transaction {
                     User.selectAll().map { row ->
-                        mapOf(
-                            "uid" to row[User.uid],
-                            "first_name" to row[User.firstName],
-                            "last_name" to row[User.lastName],
-                            "email" to row[User.email],
-                            "phone" to row[User.phone]
+                        Users(
+                            uid = row[User.uid],
+                            firstName = row[User.firstName],
+                            lastName = row[User.lastName],
+                            email = row[User.email],
+                            password = row[User.password],
+                            phone = row[User.phone],
                         )
                     }
                 }
-                call.respond(User)
+                call.respond(users)
             }
 
             post {
@@ -47,25 +49,24 @@ fun Application.configureRouting() {
             }
         }
 
-        // Car Routes
-        route("/Car") {
+        route("/car") {
             get {
-                val Car = transaction {
+                val cars = transaction {
                     Car.selectAll().map { row ->
-                        mapOf(
-                            "cid" to row[Car.cid],
-                            "uid" to row[Car.uid],
-                            "brand" to row[Car.brand],
-                            "model" to row[Car.model],
-                            "color" to row[Car.color],
-                            "plate" to row[Car.plate],
-                            "location" to row[Car.location],
-                            "price" to row[Car.price],
-                            "isAvailable" to row[Car.isAvailable]
+                        Cars(
+                            cid = row[Car.cid],
+                            uid = row[Car.uid],
+                            brand = row[Car.brand],
+                            model = row[Car.model],
+                            color = row[Car.color],
+                            plate = row[Car.plate],
+                            location = row[Car.location],
+                            price = row[Car.price],
+                            isAvailable = row[Car.isAvailable]
                         )
                     }
                 }
-                call.respond(Car)
+                call.respond(cars)
             }
 
             post {
@@ -86,35 +87,34 @@ fun Application.configureRouting() {
             }
         }
 
-        // Booking Routes
-        route("/Booking") {
+        route("/booking") {
             get {
-                val bookings  = transaction {
+                val bookings = transaction {
                     Booking.selectAll().map { row ->
-                        mapOf(
-                            "bid" to row[Booking.bid],
-                            "cid" to row[Booking.cid],
-                            "uid" to row[Booking.uid],
-                            "start" to row[Booking.start],
-                            "end" to row[Booking.end],
-                            "total" to row[Booking.total],
-                            "status" to row[Booking.status]
+                        Bookings(
+                            bid = row[Booking.bid],
+                            cid = row[Booking.cid],
+                            uid = row[Booking.uid],
+                            start = row[Booking.start],
+                            end = row[Booking.end],
+                            total = row[Booking.total],
+                            status = row[Booking.status]
                         )
                     }
                 }
-                call.respond(bookings )
+                call.respond(bookings)
             }
 
             post {
-                val bookings = call.receive<Map<String, String>>()
+                val booking = call.receive<Map<String, String>>()
                 transaction {
                     Booking.insert {
-                        it[cid] = bookings["cid"]!!.toInt()
-                        it[uid] = bookings["uid"]!!.toInt()
-                        it[start] = bookings["start"]!!
-                        it[end] = bookings["end"]!!
-                        it[total] = bookings["total"]!!.toFloat()
-                        it[status] = bookings["status"]!!
+                        it[cid] = booking["cid"]!!.toInt()
+                        it[uid] = booking["uid"]!!.toInt()
+                        it[start] = booking["start"]!!
+                        it[end] = booking["end"]!!
+                        it[total] = booking["total"]!!.toFloat()
+                        it[status] = booking["status"]!!
                     }
                 }
                 call.respond("Booking added successfully")
@@ -124,9 +124,12 @@ fun Application.configureRouting() {
 }
 
 fun initDatabase() {
-    val dbUrl = "jdbc:mysql://localhost:3306/park2share"
+    val dbHost = "localhost"
+    val dbPort = "3306"
+    val dbName = "park2share"
     val dbUser = "root"
     val dbPassword = "secret"
+    val dbUrl = "jdbc:mysql://$dbHost:$dbPort/"
 
     Database.connect(
         url = dbUrl,
@@ -136,6 +139,80 @@ fun initDatabase() {
     )
 
     transaction {
+        // CREATE DB
+        exec("CREATE DATABASE IF NOT EXISTS $dbName")
+    }
+
+    Database.connect(
+        url = "$dbUrl$dbName",
+        driver = "com.mysql.cj.jdbc.Driver",
+        user = dbUser,
+        password = dbPassword
+    )
+
+    transaction {
         SchemaUtils.create(User, Car, Booking)
+
+        // USER SAMPLE DATA
+        if (User.selectAll().empty()) {
+            User.insert {
+                it[firstName] = "Martin"
+                it[lastName] = "Mirchevski"
+                it[email] = "m.mirchevski@student.xu-university.de"
+                it[password] = "whatcouldthisbe123"
+                it[phone] = "+359878884010"
+            }
+            User.insert {
+                it[firstName] = "Marie-Belle"
+                it[lastName] = "Khaddage"
+                it[email] = "m.khaddage@@student.xu-university.de"
+                it[password] = "password567"
+                it[phone] = "+49123456789"
+            }
+        }
+
+        // CAR SAMPLE DATA
+        if (Car.selectAll().empty()) {
+            Car.insert {
+                it[uid] = 1
+                it[brand] = "BMW"
+                it[model] = "X3"
+                it[color] = "Dark Blue"
+                it[plate] = "CB8805TK"
+                it[location] = "Babelsberg"
+                it[price] = 50.0f
+                it[isAvailable] = true
+            }
+            Car.insert {
+                it[uid] = 2
+                it[brand] = "Honda"
+                it[model] = "Civic"
+                it[color] = "Black"
+                it[plate] = "XYZ789"
+                it[location] = "Neukoln"
+                it[price] = 60.0f
+                it[isAvailable] = true
+            }
+        }
+
+        // BOOKING SAMPLE DATA
+        if (Booking.selectAll().empty()) {
+            Booking.insert {
+                it[cid] = 1
+                it[uid] = 1
+                it[start] = "2025-01-20 10:00:00"
+                it[end] = "2025-01-20 18:00:00"
+                it[total] = 100.0f
+                it[status] = "Confirmed"
+            }
+            Booking.insert {
+                it[cid] = 2
+                it[uid] = 2
+                it[start] = "2025-01-21 08:00:00"
+                it[end] = "2025-01-21 12:00:00"
+                it[total] = 60.0f
+                it[status] = "Pending"
+            }
+        }
     }
 }
