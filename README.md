@@ -45,3 +45,5 @@ Park2Share is a revolutionary application that transforms airport parking into a
 2. - Open the **frontend** file 
 - Sync the grandle files
 - Run the app
+
+Icons from [icons8](https://icons8.com/icons/)
