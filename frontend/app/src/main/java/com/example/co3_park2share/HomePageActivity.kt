@@ -3,25 +3,18 @@ package com.example.co3_park2share
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
-
-
-import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.clickable
-import androidx.compose.ui.text.style.TextAlign
-import kotlinx.coroutines.launch
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-
-
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.Alignment
 
 
 class HomePageActivity : ComponentActivity() {
@@ -29,72 +22,32 @@ class HomePageActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                DashboardWithDrawer()
+                BaseDrawerScreen(title = "Dashboard") { paddingValues ->
+                    DashboardContent(paddingValues)
+                }
             }
         }
     }
 }
 
-@Composable
-fun DashboardWithDrawer() {
-    val drawerState = rememberDrawerState(DrawerValue.Closed) // Create the DrawerState
-    val scope = rememberCoroutineScope() // Coroutine scope for toggling the drawer
 
-    ModalDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            DrawerContent { selectedOption ->
-                // Handle option selection logic
-                when (selectedOption) {
-                    "Home" -> { /* Navigate to Home */ }
-                    "List Your Car" -> { /* Navigate to List Your Car */ }
-                    "My Bookings" -> { /* Navigate to My Bookings */ }
-                    "Settings" -> { /* Navigate to Settings */ }
-                }
-                scope.launch { drawerState.close() } // Close the drawer after selection
-            }
-        }
+
+@Composable
+fun DashboardContent(paddingValues: PaddingValues) {
+    Column(
+        modifier = Modifier
+            .padding(paddingValues) // Padding from Scaffold
+            .padding(16.dp) // Additional padding
     ) {
-        // Pass the drawerState to DashboardScreen
-        DashboardScreen(drawerState = drawerState)
+        QuickLinksSection()
+        Spacer(modifier = Modifier.height(16.dp))
+        NotificationsSection()
+        Spacer(modifier = Modifier.height(16.dp))
+        SuggestedCarsSection()
+        Spacer(modifier = Modifier.height(16.dp))
+        MyActivitySection()
     }
 }
-
-
-@Composable
-fun DashboardScreen(drawerState: DrawerState) {
-    val scope = rememberCoroutineScope()
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Dashboard") },
-                navigationIcon = {
-                    IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
-                    }
-                }
-            )
-        },
-        content = { paddingValues -> // Accept the padding values
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues) // Use padding values from Scaffold
-                    .padding(16.dp) // Add custom padding
-            ) {
-                QuickLinksSection()
-                Spacer(modifier = Modifier.height(16.dp))
-                NotificationsSection()
-                Spacer(modifier = Modifier.height(16.dp))
-                SuggestedCarsSection()
-                Spacer(modifier = Modifier.height(16.dp))
-                MyActivitySection()
-            }
-        }
-    )
-}
-
-
 
 @Composable
 fun DrawerContent(onOptionSelected: (String) -> Unit) {
@@ -112,7 +65,6 @@ fun DrawerContent(onOptionSelected: (String) -> Unit) {
     }
 }
 
-
 @Composable
 fun DrawerItem(label: String, onClick: (String) -> Unit) {
     Text(
@@ -124,3 +76,101 @@ fun DrawerItem(label: String, onClick: (String) -> Unit) {
             .padding(16.dp)
     )
 }
+
+@Composable
+fun QuickLinksSection() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        QuickLinkCard(title = "List Your Car", icon = R.drawable.ic_launcher_foreground)
+        QuickLinkCard(title = "Search for Cars", icon = R.drawable.ic_launcher_foreground)
+        QuickLinkCard(title = "My Bookings", icon = R.drawable.ic_launcher_foreground)
+    }
+}
+
+@Composable
+fun QuickLinkCard(title: String, icon: Int) {
+    Card(
+        modifier = Modifier
+            .width(100.dp)
+            .height(120.dp),
+        elevation = 4.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Example content for QuickLinkCard
+            Text(text = title, style = MaterialTheme.typography.body1)
+        }
+    }
+}
+
+@Composable
+fun NotificationsSection() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("Notifications", style = MaterialTheme.typography.h6)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text("- Upcoming Booking: Jan 20, 2025")
+            Text("- Pending Photo Submission")
+            Text("- New Messages")
+        }
+    }
+}
+
+@Composable
+fun SuggestedCarsSection() {
+    Column {
+        Text("Suggested Cars", style = MaterialTheme.typography.h6)
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            SuggestedCarCard(carName = "Tesla Model 3")
+            SuggestedCarCard(carName = "Ford Mustang")
+            SuggestedCarCard(carName = "Toyota Prius")
+        }
+    }
+}
+
+@Composable
+fun SuggestedCarCard(carName: String) {
+    Card(
+        modifier = Modifier
+            .width(100.dp)
+            .height(120.dp),
+        elevation = 4.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = carName, style = MaterialTheme.typography.body1)
+        }
+    }
+}
+
+@Composable
+fun MyActivitySection() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("My Activity", style = MaterialTheme.typography.h6)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text("- Upcoming Trip: Jan 22, 2025")
+            Text("- Listed Cars: 3 Active")
+            Text("- Pending Actions: 2")
+        }
+
+    }
+
+}
+

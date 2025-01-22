@@ -20,9 +20,11 @@ object Car : Table() {
     val model = varchar("model", 50)
     val color = varchar("color", 10)
     val plate = varchar("plate", 10)
+    val capacity = integer("capacity")
     val location = varchar("location", 50)
     val price = float("price")
     val isAvailable = bool("isAvailable")
+
 
     override val primaryKey = PrimaryKey(cid)
 }

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/addCarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="List Your Car"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Brand Input -->
+        <EditText
+            android:id="@+id/brandInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Brand"
+            android:inputType="text" />
+
+        <!-- Model Input -->
+        <EditText
+            android:id="@+id/modelInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Model"
+            android:inputType="text"
+            android:layout_marginTop="8dp" />
+
+        <!-- Color Input -->
+        <EditText
+            android:id="@+id/colorInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Color"
+            android:inputType="text"
+            android:layout_marginTop="8dp" />
+
+        <!-- Plate Number Input -->
+        <EditText
+            android:id="@+id/plateInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Plate Number"
+            android:inputType="text"
+            android:layout_marginTop="8dp" />
+        <!-- Plate Number Input -->
+        <EditText
+            android:id="@+id/capacityInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint=" Capacity"
+            android:inputType="text"
+            android:layout_marginTop="8dp" />
+
+        <!-- Location Input -->
+        <EditText
+            android:id="@+id/locationInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Location"
+            android:inputType="text"
+            android:layout_marginTop="8dp" />
+
+        <!-- Price Input -->
+        <EditText
+            android:id="@+id/priceInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:hint="Price per Day"
+            android:inputType="numberDecimal"
+            android:layout_marginTop="8dp" />
+
+        <!-- Availability Toggle -->
+        <Switch
+            android:id="@+id/availabilitySwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="Is Available"
+            android:layout_marginTop="16dp" />
+
+        <!-- Add Car Button -->
+        <Button
+            android:id="@+id/addCarButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Car"
+            android:backgroundTint="#FFA500"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp" />
+    </LinearLayout>
+</ScrollView>

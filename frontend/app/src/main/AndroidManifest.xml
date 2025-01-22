@@ -26,6 +26,10 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".CarDetailsActivity" />
         <activity android:name=".HomePageActivity" />
+        <activity android:name=".ListYourCarActivity" />
+        <activity android:name=".MyBookingsActivity"/>
+        <activity android:name=".SettingsActivity"/>
+
 
 
 
