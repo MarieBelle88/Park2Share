@@ -1,92 +1,150 @@
 package com.example.co3_park2share
 
+import androidx.compose.material3.*
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Switch
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import java.io.DataInput
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 
 
-class ListYourCarActivity : AppCompatActivity() {
 
+class ListYourCarActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_list_your_car)
-
-        val brandInput: EditText = findViewById(R.id.brandInput)
-        val modelInput: EditText = findViewById(R.id.modelInput)
-        val colorInput: EditText = findViewById(R.id.colorInput)
-        val plateInput: EditText = findViewById(R.id.plateInput)
-        val capacityInput : EditText = findViewById(R.id.capacityInput)
-        val locationInput: EditText = findViewById(R.id.locationInput)
-        val priceInput: EditText = findViewById(R.id.priceInput)
-        val availabilitySwitch: Switch = findViewById(R.id.availabilitySwitch)
-        val addCarButton: Button = findViewById(R.id.addCarButton)
-
-        addCarButton.setOnClickListener {
-            val brand = brandInput.text.toString()
-            val model = modelInput.text.toString()
-            val color = colorInput.text.toString()
-            val plate = plateInput.text.toString()
-            val capacity = capacityInput.text.toString()
-            val location = locationInput.text.toString()
-            val price = priceInput.text.toString().toFloatOrNull()
-            val isAvailable = availabilitySwitch.isChecked
-
-            if (brand.isEmpty() || model.isEmpty() || color.isEmpty() || plate.isEmpty() || location.isEmpty() || price == null) {
-                Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            // Send the data to the backend
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val car = mapOf(
-                        "brand" to brand,
-                        "model" to model,
-                        "color" to color,
-                        "plate" to plate,
-                        "capacity" to capacity,
-                        "location" to location,
-                        "price" to price.toString(),
-                        "isAvailable" to isAvailable.toString()
-                    )
-             /*       ApiClient.service.addCar(car) // Assuming an addCar() function exists in ApiService
-                    runOnUiThread {
-                        Toast.makeText(this@ListYourCarActivity, "Car added successfully", Toast.LENGTH_SHORT).show()
-                        clearFields(brandInput, modelInput, colorInput, plateInput, locationInput, priceInput, availabilitySwitch)
-                    }*/
-                } catch (e: Exception) {
-                    runOnUiThread {
-                        Toast.makeText(this@ListYourCarActivity, "Error adding car", Toast.LENGTH_SHORT).show()
-                    }
+        setContent {
+            MaterialTheme {
+                BaseDrawerScreen(title = "List Your Car") { paddingValues ->
+                    ListYourCarContent(paddingValues)
                 }
             }
         }
     }
+}
 
-    private fun clearFields(
-        brandInput: EditText,
-        modelInput: EditText,
-        colorInput: EditText,
-        plateInput: EditText,
-        capacityInput: EditText,
-        locationInput: EditText,
-        priceInput: EditText,
-        availabilitySwitch: Switch
+@Composable
+fun ListYourCarContent(paddingValues: PaddingValues) {
+    var brand by remember { mutableStateOf("") }
+    var model by remember { mutableStateOf("") }
+    var color by remember { mutableStateOf("") }
+    var plate by remember { mutableStateOf("") }
+    var capacity by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
+    var price by remember { mutableStateOf("") }
+    var isAvailable by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
+    Column(
+        modifier = Modifier
+            .padding(paddingValues)
+            .padding(16.dp)
+            .fillMaxWidth()
     ) {
-        brandInput.text.clear()
-        modelInput.text.clear()
-        colorInput.text.clear()
-        plateInput.text.clear()
-        capacityInput.text.clear()
-        locationInput.text.clear()
-        priceInput.text.clear()
-        availabilitySwitch.isChecked = false
+        OutlinedTextField(
+            value = brand,
+            onValueChange = { brand = it },
+            label = { Text("Brand") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = model,
+            onValueChange = { model = it },
+            label = { Text("Model") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = color,
+            onValueChange = { color = it },
+            label = { Text("Color") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = plate,
+            onValueChange = { plate = it },
+            label = { Text("Plate") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = capacity,
+            onValueChange = { capacity = it },
+            label = { Text("Capacity") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = location,
+            onValueChange = { location = it },
+            label = { Text("Location") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = price,
+            onValueChange = { price = it },
+            label = { Text("Price") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Available")
+            Spacer(modifier = Modifier.width(8.dp))
+            Switch(checked = isAvailable, onCheckedChange = { isAvailable = it })
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        val context = LocalContext.current // Declare this once outside the Button
+
+        Button(
+            onClick = {
+                if (brand.isEmpty() || model.isEmpty() || color.isEmpty() || plate.isEmpty() || location.isEmpty() || price.isEmpty()) {
+                    Toast.makeText(context, "Please fill out all fields", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Send the data to the backend
+                    scope.launch {
+                        try {
+                            val car = mapOf(
+                                "brand" to brand,
+                                "model" to model,
+                                "color" to color,
+                                "plate" to plate,
+                                "capacity" to capacity,
+                                "location" to location,
+                                "price" to price,
+                                "isAvailable" to isAvailable.toString()
+                            )
+                            // Replace this with your actual API call
+                            Toast.makeText(context, "Car added successfully", Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Error adding car", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Add Car")
+        }
+
+        /*       ApiClient.service.addCar(car) // Assuming an addCar() function exists in ApiService
+runOnUiThread {
+    Toast.makeText(this@ListYourCarActivity, "Car added successfully", Toast.LENGTH_SHORT).show()
+    clearFields(brandInput, modelInput, colorInput, plateInput, locationInput, priceInput, availabilitySwitch)
+}*/
+
+                            // Replace with API call
+
+
     }
 }
