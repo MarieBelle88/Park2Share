@@ -10,6 +10,7 @@ data class Cars(
     val model: String,
     val color: String,
     val plate: String,
+    val capacity: Int,
     val location: String,
     val price: Float,
     val isAvailable: Boolean,

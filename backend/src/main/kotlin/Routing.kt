@@ -60,6 +60,7 @@ fun Application.configureRouting() {
                             model = row[Car.model],
                             color = row[Car.color],
                             plate = row[Car.plate],
+                            capacity = row[Car.capacity],
                             location = row[Car.location],
                             price = row[Car.price],
                             isAvailable = row[Car.isAvailable]
@@ -78,6 +79,7 @@ fun Application.configureRouting() {
                         it[model] = car["model"]!!
                         it[color] = car["color"]!!
                         it[plate] = car["plate"]!!
+                        it[capacity] = car["capacity"]!!.toInt()
                         it[location] = car["location"]!!
                         it[price] = car["total"]!!.toFloat()
                         it[isAvailable] = car["isAvailable"]!!.toBoolean()
@@ -179,6 +181,7 @@ fun initDatabase() {
                 it[model] = "X3"
                 it[color] = "Dark Blue"
                 it[plate] = "CB8805TK"
+                it[capacity] = 4
                 it[location] = "Babelsberg"
                 it[price] = 50.0f
                 it[isAvailable] = true
@@ -189,6 +192,7 @@ fun initDatabase() {
                 it[model] = "Civic"
                 it[color] = "Black"
                 it[plate] = "XYZ789"
+                it[capacity] = 4
                 it[location] = "Neukoln"
                 it[price] = 60.0f
                 it[isAvailable] = true
