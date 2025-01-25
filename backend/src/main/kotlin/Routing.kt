@@ -17,7 +17,7 @@ fun Application.configureRouting() {
             call.respond(mapOf("message" to "Welcome to the Park2Share API"))
         }
 
-        route("/user") {
+        route("/users") {
             get {
                 val users = transaction {
                     User.selectAll().map { row ->
@@ -75,7 +75,7 @@ fun Application.configureRouting() {
             }
         }
 
-        route("/car") {
+        route("/cars") {
             get {
                 val cars = transaction {
                     Car.selectAll().map { row ->
@@ -143,7 +143,7 @@ fun Application.configureRouting() {
             }
         }
 
-        route("/booking") {
+        route("/bookings") {
             get {
                 val bookings = transaction {
                     Booking.selectAll().map { row ->
