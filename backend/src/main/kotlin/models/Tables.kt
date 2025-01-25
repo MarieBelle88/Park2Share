@@ -1,6 +1,9 @@
 package com.example.models
 
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.ForeignKeyConstraint
+import org.jetbrains.exposed.sql.ReferenceOption
+
 
 object User : Table() {
     val uid = integer("uid").autoIncrement()
@@ -15,7 +18,7 @@ object User : Table() {
 
 object Car : Table() {
     val cid = integer("cid").autoIncrement()
-    val uid = integer("uid").references(User.uid)
+    val uid = integer("uid").references(User.uid, onDelete = ReferenceOption.CASCADE)
     val brand = varchar("brand", 20)
     val model = varchar("model", 50)
     val color = varchar("color", 10)
@@ -31,8 +34,8 @@ object Car : Table() {
 
 object Booking : Table() {
     val bid = integer("bid").autoIncrement()
-    val cid = integer("cid").references(Car.cid)
-    val uid = integer("uid").references(User.uid)
+    val cid = integer("cid").references(Car.cid, onDelete = ReferenceOption.CASCADE)
+    val uid = integer("uid").references(User.uid, onDelete = ReferenceOption.CASCADE)
     val start = varchar("start", 50)
     var end = varchar("end", 50)
     val total = float("total")
