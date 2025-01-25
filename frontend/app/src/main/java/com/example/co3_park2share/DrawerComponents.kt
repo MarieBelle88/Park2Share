@@ -23,6 +23,8 @@ fun DrawerContent(onOptionSelected: (String) -> Unit) {
         DrawerItem(label = "Home", onClick = onOptionSelected)
         DrawerItem(label = "List Your Car", onClick = onOptionSelected)
         DrawerItem(label = "My Bookings", onClick = onOptionSelected)
+        DrawerItem(label = "My Listings", onClick = onOptionSelected)
+        DrawerItem(label = "My Account", onClick = onOptionSelected)
         DrawerItem(label = "Settings", onClick = onOptionSelected)
     }
 }
