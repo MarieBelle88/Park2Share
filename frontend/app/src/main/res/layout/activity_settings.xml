@@ -31,7 +31,11 @@
             android:id="@+id/setting1Switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:minHeight="48dp"
+            android:minWidth="48dp"
             android:checked="true" />
+
 
         <!-- Example Setting 2 -->
         <TextView
@@ -44,6 +48,8 @@
         <Switch
             android:id="@+id/setting2Switch"
             android:layout_width="wrap_content"
+            android:minHeight="48dp"
+            android:minWidth="48dp"
             android:layout_height="wrap_content" />
 
         <!-- Example Setting 3 -->
@@ -58,6 +64,7 @@
             android:id="@+id/setting3Spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:entries="@array/language_options" />
 
         <!-- Save Button -->

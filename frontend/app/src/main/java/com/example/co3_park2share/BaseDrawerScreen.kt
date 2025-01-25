@@ -29,7 +29,10 @@ fun BaseDrawerScreen(
                     "Home" -> navigateToActivity(context, HomePageActivity::class.java)
                     "List Your Car" -> navigateToActivity(context, ListYourCarActivity::class.java)
                     "My Bookings" -> navigateToActivity(context, MyBookingsActivity::class.java)
+                    "My Listings" -> navigateToActivity(context, MyListingsActivity::class.java)
+                    "My Account" -> navigateToActivity(context, MyAccountActivity::class.java)
                     "Settings" -> navigateToActivity(context, SettingsActivity::class.java)
+
                 }
                 scope.launch { drawerState.close() } // Close the drawer after selection
             }
