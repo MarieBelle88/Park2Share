@@ -1,41 +1,83 @@
-# backend
+# Backend Setup for Park2Share
 
-This project was created using the [Ktor Project Generator](https://start.ktor.io).
+This documentation guides you through setting up and running the backend for the Park2Share project.
 
-Here are some useful links to get you started:
+## Prerequisites
 
-- [Ktor Documentation](https://ktor.io/docs/home.html)
-- [Ktor GitHub page](https://github.com/ktorio/ktor)
-- The [Ktor Slack chat](https://app.slack.com/client/T09229ZC6/C0A974TJ9). You'll need to [request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up) to join.
+Before proceeding, ensure you have the following installed on your system:
 
-## Features
+- [Docker](https://www.docker.com/get-started)
+- [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
-Here's a list of features included in this project:
+---
 
-| Name                                                                   | Description                                                                        |
-| ------------------------------------------------------------------------|------------------------------------------------------------------------------------ |
-| [Content Negotiation](https://start.ktor.io/p/content-negotiation)     | Provides automatic content conversion according to Content-Type and Accept headers |
-| [Routing](https://start.ktor.io/p/routing)                             | Provides a structured routing DSL                                                  |
-| [kotlinx.serialization](https://start.ktor.io/p/kotlinx-serialization) | Handles JSON serialization using kotlinx.serialization library                     |
+## Running the Backend
 
-## Building & Running
 
-To build or run the project, use one of the following tasks:
+### 1. Open Project in IntelliJ IDEA
 
-| Task                          | Description                                                          |
-| -------------------------------|---------------------------------------------------------------------- |
-| `./gradlew test`              | Run the tests                                                        |
-| `./gradlew build`             | Build everything                                                     |
-| `buildFatJar`                 | Build an executable JAR of the server with all dependencies included |
-| `buildImage`                  | Build the docker image to use with the fat JAR                       |
-| `publishImageToLocalRegistry` | Publish the docker image locally                                     |
-| `run`                         | Run the server                                                       |
-| `runDocker`                   | Run using the local docker image                                     |
+- Open IntelliJ IDEA.
+- Select `Open` and choose the `backend` folder from the cloned repository.
+- Let IntelliJ index and analyze the project files. During this process, review the `build.gradle` and related Gradle configuration files to understand dependencies.
 
-If the server starts successfully, you'll see the following output:
+---
 
+### 3. Set Up the MySQL Database with Docker
+
+Pull the MySQL Docker image and create a container:
+```bash
+docker pull mysql:latest
+docker run --name mysql-park2share -e MYSQL_ROOT_PASSWORD=secret -p 3306:3306 -d mysql:latest
 ```
-2024-12-04 14:32:45.584 [main] INFO  Application - Application started in 0.303 seconds.
-2024-12-04 14:32:45.682 [main] INFO  Application - Responding at http://0.0.0.0:8080
-```
+- **Container Name**: `mysql-park2share` (you can change this if needed).
+- **Port Mapping**: Maps the MySQL service to `localhost:3306`.
+- **Environment Variable**: `MYSQL_ROOT_PASSWORD` is set to `secret`.
 
+> **Note**: Ensure the Docker service is running and accessible.
+
+---
+
+### 4. Run the API
+
+After IntelliJ has finished indexing:
+
+1. Navigate to the `Application.kt` file in the backend source folder.
+2. Click the `Play` button at the top to start the API.
+3. The API should now be running on:
+    - **URL**: `http://127.0.0.1:8080` or `http://localhost:8080`
+
+---
+
+### 5. Database Initialization
+
+When the API starts, it will:
+
+- Automatically create the required database in the container.
+- Generate all necessary tables.
+- Populate the tables with initial data.
+
+You can verify this by connecting to the MySQL database:
+```bash
+docker exec -it mysql-park2share mysql -u root -p
+```
+- Use the password `secret` to log in.
+- Run `SHOW DATABASES;` to see the `park2share` database.
+
+---
+
+### 6. Verify the Setup
+
+Access the API base URL:
+```bash
+http://127.0.0.1:8080
+```
+You should see a response confirming the API is running.
+
+---
+
+### Next Steps
+
+Once the backend is running, you can:
+
+- Test the endpoints using tools like Postman or cURL.
+- Endpoints (to be added).
