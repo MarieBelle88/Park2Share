@@ -12,7 +12,6 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 fun Application.configureRouting() {
     routing {
-
         get("/") {
             call.respond(mapOf("message" to "Welcome to the Park2Share API"))
         }
@@ -48,6 +47,33 @@ fun Application.configureRouting() {
                 call.respond("User added successfully")
             }
 
+            post("/login") {
+                val credentials = call.receive<Map<String, String>>()
+                val email = credentials["email"]!!
+                val password = credentials["password"]!!
+
+                val user = transaction {
+                    User.select { User.email eq email }
+                        .firstOrNull()
+                        ?.let { row ->
+                            Users(
+                                uid = row[User.uid],
+                                firstName = row[User.firstName],
+                                lastName = row[User.lastName],
+                                email = row[User.email],
+                                password = row[User.password],
+                                phone = row[User.phone]
+                            )
+                        }
+                }
+
+                if (user != null && user.password == password) {
+                    call.respond(user)
+                } else {
+                    call.respond(mapOf("error" to "Invalid email or password"))
+                }
+            }
+
             put("/{uid}") {
                 val uid = call.parameters["uid"]!!.toInt()
                 val updatedData = call.receive<Map<String, String>>()
@@ -70,10 +96,10 @@ fun Application.configureRouting() {
                     Car.deleteWhere { Car.uid eq uid }
                     User.deleteWhere { User.uid eq uid }
                 }
-
                 call.respond("User deleted successfully")
             }
         }
+
 
         route("/cars") {
             get {

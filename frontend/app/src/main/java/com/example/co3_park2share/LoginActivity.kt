@@ -5,6 +5,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.co3_park2share.databinding.ActivityLoginBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
 
@@ -13,7 +18,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-
 
         // Initialize View Binding
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -27,12 +31,39 @@ class LoginActivity : AppCompatActivity() {
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please fill out all fields", Toast.LENGTH_SHORT).show()
             } else {
-                // Implement authentication logic here
-                Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
-                // Navigate to Dashboard or another page
-                val intent = Intent(this, HomePageActivity::class.java)
-                startActivity(intent)
-                finish() // Ensure LoginActivity is removed from the backstack
+                // Call the login function
+                loginUser(email, password)
+            }
+        }
+    }
+
+    private fun loginUser(email: String, password: String) {
+        val credentials = mapOf("email" to email, "password" to password)
+
+        // Use Coroutines to perform the network request on a background thread
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response: Response<Users> = RetrofitClient.apiService.loginUser(credentials)
+
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful && response.body() != null) {
+                        // Login successful
+                        val user = response.body()!!
+                        Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
+
+                        // Navigate to the next activity (e.g., HomePageActivity)
+                        val intent = Intent(this@LoginActivity, HomePageActivity::class.java)
+                        startActivity(intent)
+                        finish() // Close the LoginActivity
+                    } else {
+                        // Login failed
+                        Toast.makeText(this@LoginActivity, "Invalid email or password", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@LoginActivity, "Network error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
