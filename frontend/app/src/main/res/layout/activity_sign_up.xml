@@ -21,6 +21,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp" />
 
+    <!-- First Name Field -->
+    <EditText
+        android:id="@+id/etFirstName"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:hint="First Name"
+        android:inputType="text"
+        android:autofillHints="name"
+        android:padding="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signUpTitle" />
+
+    <!-- Last Name Field -->
+    <EditText
+        android:id="@+id/etLastName"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:hint="Last Name"
+        android:inputType="text"
+        android:autofillHints="name"
+        android:padding="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etFirstName" />
+
+    <!-- Email Field -->
     <EditText
         android:id="@+id/etSignUpEmail"
         android:layout_width="0dp"
@@ -29,12 +62,14 @@
         android:inputType="textEmailAddress"
         android:autofillHints="emailAddress"
         android:padding="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/signUpTitle" />
+        app:layout_constraintTop_toBottomOf="@id/etLastName" />
 
+    <!-- Password Field -->
     <EditText
         android:id="@+id/etSignUpPassword"
         android:layout_width="0dp"
@@ -50,6 +85,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etSignUpEmail" />
 
+    <!-- Confirm Password Field -->
     <EditText
         android:id="@+id/etConfirmPassword"
         android:layout_width="0dp"
@@ -64,6 +100,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etSignUpPassword" />
 
+    <!-- Phone Number Field -->
+    <EditText
+        android:id="@+id/etPhone"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:hint="Phone Number"
+        android:inputType="phone"
+        android:autofillHints="phone"
+        android:padding="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etConfirmPassword" />
+
+    <!-- Sign Up Button -->
     <Button
         android:id="@+id/btnSignUpSubmit"
         android:layout_width="0dp"
@@ -76,6 +129,6 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etConfirmPassword" />
+        app:layout_constraintTop_toBottomOf="@id/etPhone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

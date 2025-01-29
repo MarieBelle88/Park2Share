@@ -7,4 +7,8 @@ import retrofit2.http.POST
 interface ApiService {
     @POST("/users/login") // The endpoint for user login
     suspend fun loginUser(@Body credentials: Map<String, String>): Response<Users>
+
+
+    @POST("/users")
+    suspend fun signUpUser(@Body userData: Map<String, String>): Response<Map<String, String>>
 }

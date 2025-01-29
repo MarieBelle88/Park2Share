@@ -34,17 +34,23 @@ fun Application.configureRouting() {
             }
 
             post {
-                val user = call.receive<Map<String, String>>()
-                transaction {
-                    User.insert {
-                        it[firstName] = user["first_name"]!!
-                        it[lastName] = user["last_name"]!!
-                        it[email] = user["email"]!!
-                        it[password] = user["password"]!!
-                        it[phone] = user["phone"]!!
+                try {
+                    val user = call.receive<Map<String, String>>()
+                    transaction {
+                        User.insert {
+                            it[firstName] = user["first_name"]!!
+                            it[lastName] = user["last_name"]!!
+                            it[email] = user["email"]!!
+                            it[password] = user["password"]!!
+                            it[phone] = user["phone"]!!
+                        }
                     }
+                    // Return a JSON response
+                    call.respond(mapOf("message" to "User added successfully"))
+                } catch (e: Exception) {
+                    // Handle errors and return a JSON response
+                    call.respond(mapOf("error" to "An error occurred: ${e.message}"))
                 }
-                call.respond("User added successfully")
             }
 
             post("/login") {
