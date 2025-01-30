@@ -5,8 +5,8 @@ data class Listing (
     var model : String,
     var color : String,
     var plate : String,
-    var capacity : String,
+    var capacity : Int,
     var location : String,
-    var price : String,
-    var isAvailable : String,
+    var price : Float,
+    var isAvailable : Boolean,
 )

@@ -9,6 +9,7 @@ import io.ktor.server.request.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import io.ktor.http.HttpStatusCode
 
 fun Application.configureRouting() {
     routing {
@@ -129,21 +130,38 @@ fun Application.configureRouting() {
             }
 
             post {
-                val car = call.receive<Map<String, String>>()
-                transaction {
-                    Car.insert {
-                        it[uid] = car["uid"]!!.toInt()
-                        it[brand] = car["brand"]!!
-                        it[model] = car["model"]!!
-                        it[color] = car["color"]!!
-                        it[plate] = car["plate"]!!
-                        it[capacity] = car["capacity"]!!.toInt()
-                        it[location] = car["location"]!!
-                        it[price] = car["total"]!!.toFloat()
-                        it[isAvailable] = car["isAvailable"]!!.toBoolean()
+                try {
+                    val car = call.receive<Map<String, String>>()
+
+                    // Validate required fields
+                    if (car["uid"].isNullOrEmpty() || car["brand"].isNullOrEmpty() || car["model"].isNullOrEmpty() ||
+                        car["color"].isNullOrEmpty() || car["plate"].isNullOrEmpty() || car["capacity"].isNullOrEmpty() ||
+                        car["location"].isNullOrEmpty() || car["price"].isNullOrEmpty() || car["isAvailable"].isNullOrEmpty()) {
+                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Missing required fields"))
+                        return@post
                     }
+
+                    // Insert the car into the database
+                    transaction {
+                        Car.insert {
+                            it[uid] = car["uid"]!!.toInt()
+                            it[brand] = car["brand"]!!
+                            it[model] = car["model"]!!
+                            it[color] = car["color"]!!
+                            it[plate] = car["plate"]!!
+                            it[capacity] = car["capacity"]!!.toInt()
+                            it[location] = car["location"]!!
+                            it[price] = car["price"]!!.toFloat()
+                            it[isAvailable] = car["isAvailable"]!!.toBoolean()
+                        }
+                    }
+
+                    // Return a success response
+                    call.respond(mapOf("message" to "Car added successfully"))
+                } catch (e: Exception) {
+                    // Handle errors
+                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "An error occurred: ${e.message}"))
                 }
-                call.respond("Car added successfully")
             }
 
             put("/{cid}") {
@@ -158,7 +176,7 @@ fun Application.configureRouting() {
                         it[plate] = updatedData["plate"]!!
                         it[capacity] = updatedData["capacity"]!!.toInt()
                         it[location] = updatedData["location"]!!
-                        it[price] = updatedData["total"]!!.toFloat()
+                        it[price] = updatedData["price"]!!.toFloat()
                         it[isAvailable] = updatedData["isAvailable"]!!.toBoolean()
                     }
                 }

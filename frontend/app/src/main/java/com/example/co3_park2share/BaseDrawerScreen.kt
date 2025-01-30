@@ -2,14 +2,15 @@ package com.example.co3_park2share
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun BaseDrawerScreen(
@@ -18,13 +19,12 @@ fun BaseDrawerScreen(
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current // Access the current context for navigation
+    val context = LocalContext.current
 
     ModalDrawer(
         drawerState = drawerState,
         drawerContent = {
             DrawerContent { selectedOption ->
-                // Handle navigation logic here
                 when (selectedOption) {
                     "Home" -> navigateToActivity(context, HomePageActivity::class.java)
                     "List Your Car" -> navigateToActivity(context, ListYourCarActivity::class.java)
@@ -32,9 +32,8 @@ fun BaseDrawerScreen(
                     "My Listings" -> navigateToActivity(context, MyListingsActivity::class.java)
                     "My Account" -> navigateToActivity(context, MyAccountActivity::class.java)
                     "Settings" -> navigateToActivity(context, SettingsActivity::class.java)
-
                 }
-                scope.launch { drawerState.close() } // Close the drawer after selection
+                scope.launch { drawerState.close() }
             }
         }
     ) {
@@ -46,11 +45,18 @@ fun BaseDrawerScreen(
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(Icons.Default.Menu, contentDescription = "Menu")
                         }
-                    }
+                    },
+                    modifier = Modifier.statusBarsPadding() // ✅ Fixes top bar overlap issue
                 )
             },
             content = { paddingValues ->
-                content(paddingValues) // Inject specific page content here
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+                    content(paddingValues) // Ensure content respects padding
+                }
             }
         )
     }

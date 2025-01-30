@@ -91,6 +91,13 @@ dependencies {
     implementation("io.ktor:ktor-server-auth-jwt:2.0.0")
     implementation("org.mindrot:jbcrypt:0.4") // For password hashing
 
+    // ViewModel and LiveData
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    implementation ("androidx.activity:activity-ktx:1.7.2" )// For by viewModels() in Activity
+    implementation ("androidx.fragment:fragment-ktx:1.6.1" )// For by viewModels() in Fragment
+
+
 
 
 

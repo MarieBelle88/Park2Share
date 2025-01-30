@@ -66,7 +66,7 @@ class SignUpActivity : AppCompatActivity() {
                         if (responseBody != null && responseBody["message"] == "User added successfully") {
                             // Sign-up successful
                             Toast.makeText(this@SignUpActivity, "Sign-up successful!", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this@SignUpActivity, HomePageActivity::class.java)
+                            val intent = Intent(this@SignUpActivity, LoginActivity::class.java)
                             startActivity(intent)
                             finish() // Close the SignUpActivity
                         } else {

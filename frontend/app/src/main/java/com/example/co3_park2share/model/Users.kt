@@ -1,4 +1,4 @@
-package com.example.co3_park2share
+package com.example.co3_park2share.model
 
 import kotlinx.serialization.Serializable
 

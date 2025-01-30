@@ -12,24 +12,55 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import retrofit2.Response
+import androidx.activity.viewModels
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import com.example.co3_park2share.viewmodel.UserViewModel
 
+class ListYourCarActivity : AppCompatActivity() {
 
+    private val userViewModel: UserViewModel by viewModels()
 
-class ListYourCarActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                BaseDrawerScreen(title = "List Your Car") { paddingValues ->
-                    ListYourCarContent(paddingValues)
+        supportActionBar?.hide()
+
+
+        // Observe the logged-in user
+        userViewModel.loggedInUser.observe(this) { user ->
+            if (user == null) {
+                // User is not logged in
+                Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            } else {
+                // Use the logged-in user's ID in your API requests
+                setContent {
+                    MaterialTheme {
+                        BaseDrawerScreen(title = "List Your Car") { paddingValues ->
+                            ListYourCarContent(
+                                paddingValues = paddingValues,
+                                loggedInUserId = user.uid
+                            )
+                        }
+                    }
                 }
             }
         }
     }
 }
 
+
+
+
 @Composable
-fun ListYourCarContent(paddingValues: PaddingValues) {
+fun ListYourCarContent(
+    paddingValues: PaddingValues,
+    loggedInUserId: Int // Add loggedInUserId as a parameter
+) {
     var brand by remember { mutableStateOf("") }
     var model by remember { mutableStateOf("") }
     var color by remember { mutableStateOf("") }
@@ -39,6 +70,7 @@ fun ListYourCarContent(paddingValues: PaddingValues) {
     var price by remember { mutableStateOf("") }
     var isAvailable by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -104,30 +136,71 @@ fun ListYourCarContent(paddingValues: PaddingValues) {
             Switch(checked = isAvailable, onCheckedChange = { isAvailable = it })
         }
         Spacer(modifier = Modifier.height(16.dp))
-        val context = LocalContext.current // Declare this once outside the Button
 
+        // Add Car Button
         Button(
             onClick = {
-                if (brand.isEmpty() || model.isEmpty() || color.isEmpty() || plate.isEmpty() || location.isEmpty() || price.isEmpty()) {
-                    Toast.makeText(context, "Please fill out all fields", Toast.LENGTH_SHORT).show()
+                val missingFields = mutableListOf<String>()
+
+                if (brand.trim().isEmpty()) missingFields.add("Brand")
+                if (model.trim().isEmpty()) missingFields.add("Model")
+                if (color.trim().isEmpty()) missingFields.add("Color")
+                if (plate.trim().isEmpty()) missingFields.add("Plate")
+                if (capacity.trim().isEmpty()) missingFields.add("Capacity")
+                if (location.trim().isEmpty()) missingFields.add("Location")
+                if (price.trim().isEmpty()) missingFields.add("Price")
+
+                if (missingFields.isNotEmpty()) {
+                    val errorMessage = "Missing fields: ${missingFields.joinToString(", ")}"
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                 } else {
-                    // Send the data to the backend
+
+                    val car = mapOf(
+                        "uid" to loggedInUserId.toString(), // Use the logged-in user's ID
+                        "brand" to brand,
+                        "model" to model,
+                        "color" to color,
+                        "plate" to plate,
+                        "capacity" to capacity,
+                        "location" to location,
+                        "price" to price,
+                        "isAvailable" to isAvailable.toString()
+                    )
+
+                    // Make the API call
                     scope.launch {
                         try {
-                            val car = mapOf(
-                                "brand" to brand,
-                                "model" to model,
-                                "color" to color,
-                                "plate" to plate,
-                                "capacity" to capacity,
-                                "location" to location,
-                                "price" to price,
-                                "isAvailable" to isAvailable.toString()
-                            )
-                            // Replace this with your actual API call
-                            Toast.makeText(context, "Car added successfully", Toast.LENGTH_SHORT).show()
+                            val response: Response<Map<String, String>> = withContext(Dispatchers.IO) {
+                                RetrofitClient.apiService.addCar(car)
+                            }
+
+                            withContext(Dispatchers.Main) {
+                                if (response.isSuccessful) {
+                                    val responseBody = response.body()
+                                    if (responseBody != null && responseBody["message"] == "Car added successfully") {
+                                        Toast.makeText(context, "Car added successfully", Toast.LENGTH_SHORT).show()
+
+                                        // Clear the fields
+                                        brand = ""
+                                        model = ""
+                                        color = ""
+                                        plate = ""
+                                        capacity = ""
+                                        location = ""
+                                        price = ""
+                                        isAvailable = false
+                                    } else {
+                                        Toast.makeText(context, "Unexpected response: $responseBody", Toast.LENGTH_SHORT).show()
+                                    }
+                                } else {
+                                    val errorBody = response.errorBody()?.string()
+                                    Toast.makeText(context, "Error adding car: $errorBody", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         } catch (e: Exception) {
-                            Toast.makeText(context, "Error adding car", Toast.LENGTH_SHORT).show()
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(context, "Network error: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
@@ -136,15 +209,5 @@ fun ListYourCarContent(paddingValues: PaddingValues) {
         ) {
             Text("Add Car")
         }
-
-        /*       ApiClient.service.addCar(car) // Assuming an addCar() function exists in ApiService
-runOnUiThread {
-    Toast.makeText(this@ListYourCarActivity, "Car added successfully", Toast.LENGTH_SHORT).show()
-    clearFields(brandInput, modelInput, colorInput, plateInput, locationInput, priceInput, availabilitySwitch)
-}*/
-
-                            // Replace with API call
-
-
     }
 }
