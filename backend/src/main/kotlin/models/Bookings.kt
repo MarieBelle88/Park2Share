@@ -7,8 +7,11 @@ data class Bookings(
     val bid: Int,
     val cid: Int,
     val uid: Int,
-    val start: String,
-    val end: String,
-    val total: Float,
-    val status: String,
+    val brand: String,
+    val model: String,
+    val color: String,
+    val plate: String,
+    val capacity: Int,
+    val location: String,
+    val price: Float
 )

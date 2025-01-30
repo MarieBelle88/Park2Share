@@ -282,28 +282,18 @@ fun initDatabase() {
             Booking.insert {
                 it[cid] = 1
                 it[uid] = 2
-                it[start] = "2025-01-20 10:00:00"
-                it[end] = "2025-01-20 18:00:00"
-                it[total] = 100.0f
-                it[status] = "Confirmed"
+
             }
             Booking.insert {
                 it[cid] = 2
                 it[uid] = 1
-                it[start] = "2025-01-21 08:00:00"
-                it[end] = "2025-01-21 12:00:00"
-                it[total] = 60.0f
-                it[status] = "Pending"
+
             }
             for (i in 3..20) {
                 Booking.insert {
                     it[cid] = i
                     it[uid] = 2
-                    it[start] = "2025-01-${(i % 31) + 1} 09:00:00"
-                    it[end] = "2025-01-${(i % 31) + 1} 17:00:00"
-                    it[total] = (50 + (i * 5) % 100).toFloat()
-                    it[status] = if (i % 3 == 0) "Cancelled" else if (i % 5 == 0) "Pending" else "Confirmed"
-                }
+                    }
             }
         }
     }

@@ -19,27 +19,25 @@ object User : Table() {
 object Car : Table() {
     val cid = integer("cid").autoIncrement()
     val uid = integer("uid").references(User.uid, onDelete = ReferenceOption.CASCADE)
-    val brand = varchar("brand", 20)
+    val brand = varchar("brand", 50)
     val model = varchar("model", 50)
-    val color = varchar("color", 10)
-    val plate = varchar("plate", 10)
+    val color = varchar("color", 50)
+    val plate = varchar("plate", 50)
     val capacity = integer("capacity")
-    val location = varchar("location", 50)
+    val location = varchar("location", 100)
     val price = float("price")
-    val isAvailable = bool("isAvailable")
-
+    val isAvailable = bool("isAvailable").default(true)
 
     override val primaryKey = PrimaryKey(cid)
 }
+
+
 
 object Booking : Table() {
     val bid = integer("bid").autoIncrement()
     val cid = integer("cid").references(Car.cid, onDelete = ReferenceOption.CASCADE)
     val uid = integer("uid").references(User.uid, onDelete = ReferenceOption.CASCADE)
-    val start = varchar("start", 50)
-    var end = varchar("end", 50)
-    val total = float("total")
-    val status = varchar("status", 20)
 
     override val primaryKey = PrimaryKey(bid)
 }
+

@@ -111,7 +111,7 @@ fun Application.configureRouting() {
         route("/cars") {
             get {
                 val cars = transaction {
-                    Car.selectAll().map { row ->
+                    Car.select { Car.isAvailable eq true }.map { row ->
                         Cars(
                             cid = row[Car.cid],
                             uid = row[Car.uid],
@@ -284,6 +284,7 @@ fun Application.configureRouting() {
         }
 
         route("/bookings") {
+
             get {
                 val bookings = transaction {
                     Booking.selectAll().map { row ->
@@ -291,53 +292,217 @@ fun Application.configureRouting() {
                             bid = row[Booking.bid],
                             cid = row[Booking.cid],
                             uid = row[Booking.uid],
-                            start = row[Booking.start],
-                            end = row[Booking.end],
-                            total = row[Booking.total],
-                            status = row[Booking.status]
+                            brand = row[Car.brand],
+                            model = row[Car.model],
+                            color = row[Car.color],
+                            plate = row[Car.plate],
+                            capacity = row[Car.capacity],
+                            location = row[Car.location],
+                            price = row[Car.price]
                         )
                     }
                 }
                 call.respond(bookings)
             }
 
-            post {
-                val booking = call.receive<Map<String, String>>()
-                transaction {
-                    Booking.insert {
-                        it[cid] = booking["cid"]!!.toInt()
-                        it[uid] = booking["uid"]!!.toInt()
-                        it[start] = booking["start"]!!
-                        it[end] = booking["end"]!!
-                        it[total] = booking["total"]!!.toFloat()
-                        it[status] = booking["status"]!!
-                    }
+
+            get("/{bid}") {
+                val bid = call.parameters["bid"]?.toIntOrNull()
+                if (bid == null) {
+                    call.respond(HttpStatusCode.BadRequest, "Invalid booking ID")
+                    return@get
                 }
-                call.respond("Booking added successfully")
+
+                val booking = transaction {
+                    (Booking innerJoin Car)
+                        .select { Booking.bid eq bid }
+                        .map { row ->
+                            Bookings(
+                                bid = row[Booking.bid],
+                                cid = row[Booking.cid],
+                                uid = row[Booking.uid],
+                                brand = row[Car.brand],
+                                model = row[Car.model],
+                                color = row[Car.color],
+                                plate = row[Car.plate],
+                                capacity = row[Car.capacity],
+                                location = row[Car.location],
+                                price = row[Car.price]
+                            )
+                        }
+                        .singleOrNull()
+                }
+
+                if (booking == null) {
+                    call.respond(HttpStatusCode.NotFound, "Booking not found")
+                } else {
+                    call.respond(booking)
+                }
+            }
+            post {
+                try {
+                    val booking = call.receive<Map<String, String>>()
+
+                    // Validate required fields
+                    val requiredFields = listOf("cid", "uid")
+                    val missingFields = requiredFields.filter { it !in booking }
+                    if (missingFields.isNotEmpty()) {
+                        call.respond(HttpStatusCode.BadRequest, "Missing fields: ${missingFields.joinToString(", ")}")
+                        return@post
+                    }
+
+                    // Check if the car is already booked
+                    val isCarAvailable = transaction {
+                        Car.select { (Car.cid eq booking["cid"]!!.toInt()) and (Car.isAvailable eq true) }
+                            .empty()
+                    }
+
+                    if (!isCarAvailable) {
+                        call.respond(HttpStatusCode.BadRequest, "Car is already booked or unavailable")
+                        return@post
+                    }
+
+                    // Insert the booking
+                    transaction {
+                        Booking.insert {
+                            it[cid] = booking["cid"]!!.toInt()
+                            it[uid] = booking["uid"]!!.toInt()
+                        }
+
+                        // Update the car's availability to false
+                        Car.update({ Car.cid eq booking["cid"]!!.toInt() }) {
+                            it[isAvailable] = false
+                        }
+                    }
+
+                    call.respond(HttpStatusCode.Created, "Car booked successfully")
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, "Failed to book car: ${e.message}")
+                }
             }
 
-            put("/{bid}") {
-                val bid = call.parameters["bid"]!!.toInt()
-                val updatedData = call.receive<Map<String, String>>()
-                transaction {
-                    Booking.update({ Booking.bid eq bid }) {
-                        it[cid] = updatedData["cid"]!!.toInt()
-                        it[uid] = updatedData["uid"]!!.toInt()
-                        it[start] = updatedData["start"]!!
-                        it[end] = updatedData["end"]!!
-                        it[total] = updatedData["total"]!!.toFloat()
-                        it[status] = updatedData["status"]!!
-                    }
+            get("/user/{uid}") {
+                val uid = call.parameters["uid"]?.toIntOrNull()
+                if (uid == null) {
+                    call.respond(HttpStatusCode.BadRequest, "Invalid user ID")
+                    return@get
                 }
-                call.respond("Booking updated successfully")
+
+                val bookings = transaction {
+                    (Booking innerJoin Car)
+                        .select { Booking.uid eq uid }
+                        .map { row ->
+                            Bookings(
+                                bid = row[Booking.bid],
+                                cid = row[Booking.cid],
+                                uid = row[Booking.uid],
+                                brand = row[Car.brand],
+                                model = row[Car.model],
+                                color = row[Car.color],
+                                plate = row[Car.plate],
+                                capacity = row[Car.capacity],
+                                location = row[Car.location],
+                                price = row[Car.price]
+                            )
+                        }
+                }
+
+                call.respond(bookings)
+            }
+
+
+            put("/{bid}") {
+                try {
+                    val bid = call.parameters["bid"]?.toIntOrNull()
+                    if (bid == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Invalid booking ID")
+                        return@put
+                    }
+
+                    val updatedData = call.receive<Map<String, String>>()
+
+                    // Validate required fields
+                    val requiredFields = listOf("cid", "uid")
+                    val missingFields = requiredFields.filter { it !in updatedData }
+                    if (missingFields.isNotEmpty()) {
+                        call.respond(HttpStatusCode.BadRequest, "Missing fields: ${missingFields.joinToString(", ")}")
+                        return@put
+                    }
+
+                    // Fetch the current booking
+                    val currentBooking = transaction {
+                        Booking.select { Booking.bid eq bid }
+                            .firstOrNull()
+                    }
+
+                    if (currentBooking == null) {
+                        call.respond(HttpStatusCode.NotFound, "Booking not found")
+                        return@put
+                    }
+
+                    val currentCid = currentBooking[Booking.cid]
+
+                    // Update the booking
+                    transaction {
+                        Booking.update({ Booking.bid eq bid }) {
+                            it[cid] = updatedData["cid"]!!.toInt()
+                            it[uid] = updatedData["uid"]!!.toInt()
+                        }
+
+                        // Update the car's availability
+                        if (currentCid != updatedData["cid"]!!.toInt()) {
+                            // Set the old car's availability to true
+                            Car.update({ Car.cid eq currentCid }) {
+                                it[isAvailable] = true
+                            }
+
+                            // Set the new car's availability to false
+                            Car.update({ Car.cid eq updatedData["cid"]!!.toInt() }) {
+                                it[isAvailable] = false
+                            }
+                        }
+                    }
+
+                    call.respond("Booking updated successfully")
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, "Failed to update booking: ${e.message}")
+                }
             }
 
             delete("/{bid}") {
-                val bid = call.parameters["bid"]!!.toInt()
-                transaction {
-                    Booking.deleteWhere { Booking.bid eq bid }
+                try {
+                    val bid = call.parameters["bid"]?.toIntOrNull()
+                    if (bid == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Invalid booking ID")
+                        return@delete
+                    }
+
+                    // Fetch the car ID associated with the booking
+                    val cid = transaction {
+                        Booking.select { Booking.bid eq bid }
+                            .firstOrNull()
+                            ?.get(Booking.cid)
+                    }
+
+                    if (cid == null) {
+                        call.respond(HttpStatusCode.NotFound, "Booking not found")
+                        return@delete
+                    }
+
+                    // Delete the booking
+                    transaction {
+                        Booking.deleteWhere { Booking.bid eq bid }
+
+                        // Update the car's availability to true
+                        Car.update({ Car.cid eq cid }) {
+                            it[isAvailable] = true
+                        }
+                    }
+
+                    call.respond("Booking deleted successfully")
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, "Failed to delete booking: ${e.message}")
                 }
-                call.respond("Booking deleted successfully")
             }
         }
     }
