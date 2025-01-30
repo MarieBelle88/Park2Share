@@ -3,7 +3,6 @@ package com.example.co3_park2share
 import androidx.compose.material3.*
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*

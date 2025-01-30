@@ -165,23 +165,112 @@ fun Application.configureRouting() {
             }
 
             put("/{cid}") {
-                val cid = call.parameters["cid"]!!.toInt()
-                val updatedData = call.receive<Map<String, String>>()
-                transaction {
-                    Car.update({ Car.cid eq cid }) {
-                        it[uid] = updatedData["uid"]!!.toInt()
-                        it[brand] = updatedData["brand"]!!
-                        it[model] = updatedData["model"]!!
-                        it[color] = updatedData["color"]!!
-                        it[plate] = updatedData["plate"]!!
-                        it[capacity] = updatedData["capacity"]!!.toInt()
-                        it[location] = updatedData["location"]!!
-                        it[price] = updatedData["price"]!!.toFloat()
-                        it[isAvailable] = updatedData["isAvailable"]!!.toBoolean()
+                try {
+                    val cid = call.parameters["cid"]?.toIntOrNull()
+                    if (cid == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Invalid car ID")
+                        return@put
+                    }
+
+                    val updatedData = call.receive<Map<String, String>>()
+
+                    // Validate required fields
+                    val requiredFields = listOf("uid", "brand", "model", "color", "plate", "capacity", "location", "price", "isAvailable")
+                    val missingFields = requiredFields.filter { it !in updatedData }
+                    if (missingFields.isNotEmpty()) {
+                        call.respond(HttpStatusCode.BadRequest, "Missing fields: ${missingFields.joinToString(", ")}")
+                        return@put
+                    }
+
+                    // Update the car in the database
+                    transaction {
+                        Car.update({ Car.cid eq cid }) {
+                            it[uid] = updatedData["uid"]!!.toInt()
+                            it[brand] = updatedData["brand"]!!
+                            it[model] = updatedData["model"]!!
+                            it[color] = updatedData["color"]!!
+                            it[plate] = updatedData["plate"]!!
+                            it[capacity] = updatedData["capacity"]!!.toInt()
+                            it[location] = updatedData["location"]!!
+                            it[price] = updatedData["price"]!!.toFloat()
+                            it[isAvailable] = updatedData["isAvailable"]!!.toBoolean()
+                        }
+                    }
+
+                    call.respond("Car updated successfully")
+                } catch (e: Exception) {
+                    // Log the error for debugging
+                    println("Error updating car: ${e.message}")
+                    call.respond(HttpStatusCode.InternalServerError, "Failed to update car: ${e.message}")
+                }
+            }
+
+            get("/{cid}") {
+                val cid = call.parameters["cid"]?.toIntOrNull()
+
+                if (cid == null) {
+                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Invalid Car ID"))
+                    return@get
+                }
+
+                val car = transaction {
+                    Car.select { Car.cid eq cid }
+                        .map { row ->
+                            Cars(
+                                cid = row[Car.cid],
+                                uid = row[Car.uid],
+                                brand = row[Car.brand],
+                                model = row[Car.model],
+                                color = row[Car.color],
+                                plate = row[Car.plate],
+                                capacity = row[Car.capacity],
+                                location = row[Car.location],
+                                price = row[Car.price],
+                                isAvailable = row[Car.isAvailable]
+                            )
+                        }
+                        .firstOrNull()
+                }
+
+                if (car != null) {
+                    call.respond(car)
+                } else {
+                    call.respond(HttpStatusCode.NotFound, mapOf("error" to "Car not found"))
+                }
+            }
+
+            get("/user/{uid}") {
+                val uid = call.parameters["uid"]?.toIntOrNull()
+                if (uid == null) {
+                    call.respond(HttpStatusCode.BadRequest, "Invalid User ID")
+                    return@get
+                }
+
+                val userListings = transaction {
+                    Car.select { Car.uid eq uid }.map { row ->
+                        Cars(
+                            cid = row[Car.cid],
+                            uid = row[Car.uid],
+                            brand = row[Car.brand],
+                            model = row[Car.model],
+                            color = row[Car.color],
+                            plate = row[Car.plate],
+                            capacity = row[Car.capacity],
+                            location = row[Car.location],
+                            price = row[Car.price],
+                            isAvailable = row[Car.isAvailable]
+                        )
                     }
                 }
-                call.respond("Car updated successfully")
+
+                if (userListings.isNotEmpty()) {
+                    call.respond(userListings)
+                } else {
+                    call.respond(HttpStatusCode.NotFound, "No listings found for user $uid")
+                }
             }
+
+
 
             delete("/{cid}") {
                 val cid = call.parameters["cid"]!!.toInt()
@@ -189,8 +278,9 @@ fun Application.configureRouting() {
                     Booking.deleteWhere { Booking.cid eq cid }
                     Car.deleteWhere { Car.cid eq cid }
                 }
-                call.respond("Car deleted successfully")
+                call.respond(HttpStatusCode.OK, mapOf("message" to "Car deleted successfully"))
             }
+
         }
 
         route("/bookings") {

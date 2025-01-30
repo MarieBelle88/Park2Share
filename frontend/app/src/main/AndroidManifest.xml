@@ -33,6 +33,9 @@
         <activity android:name=".ListYourCarActivity" />
         <activity android:name=".MyBookingsActivity"/>
         <activity android:name=".SettingsActivity"/>
+        <activity android:name=".MyListingsActivity" />
+        <activity android:name=".UpdateCarActivity"/>
+
 
 
 
