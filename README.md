@@ -20,19 +20,15 @@ Park2Share is a revolutionary application that transforms airport parking into a
 - **Frontend**: Kotlin (Android Studio)
 - **Backend**: Kotlin (IntelliJ, Ktor Framework)
 - **Database**: MySQL
-- **Third-Party Integrations**: 
-  - **Twilio**: For SMS notifications.
-  - **Redis**: For caching.
-  - **Ngrok**: For local development tunneling.
 - **Plugins**: Authentication, Call Logging, Content Negotiation, CORS, and more.
 
 ## Developers
 
-- **MarieBelle Khaddage**  
+- **MarieBelle Khaddage: Full Stack**  
   [GitHub](https://github.com/MarieBelle88)  
-  [LinkedIn](#)  
+  [LinkedIn](www.linkedin.com/in/mariebellekhaddage)  
 
-- **Martine Mirchevski**  
+- **Martine Mirchevski: Backend**  
   [GitHub](https://github.com/mrchvsk)  
   [LinkedIn](#)
 
@@ -46,4 +42,4 @@ Park2Share is a revolutionary application that transforms airport parking into a
 - Sync the grandle files
 - Run the app
 
-Icons from [icons8](https://icons8.com/icons/)
+For the backend deployment  check the README file inside the backend directory
