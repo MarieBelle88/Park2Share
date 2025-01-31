@@ -42,7 +42,6 @@ fun UpdateCarContent(carId: Int, activity: ComponentActivity) {
     val scope = rememberCoroutineScope()
     var car by remember { mutableStateOf<Listing?>(null) }
 
-    // Fetch car details when the page loads
     LaunchedEffect(Unit) {
         scope.launch {
             try {
@@ -108,13 +107,11 @@ fun UpdateCarContent(carId: Int, activity: ComponentActivity) {
                         if (response.isSuccessful) {
                             Toast.makeText(context, "Car updated successfully", Toast.LENGTH_SHORT).show()
 
-                            // Navigate back to MyListingsActivity
                             val intent = Intent(context, MyListingsActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                             context.startActivity(intent)
                             activity.finish()
                         } else {
-                            // Log the error response
                             val errorBody = response.errorBody()?.string()
                             Toast.makeText(context, "Failed to update car: $errorBody", Toast.LENGTH_SHORT).show()
                         }

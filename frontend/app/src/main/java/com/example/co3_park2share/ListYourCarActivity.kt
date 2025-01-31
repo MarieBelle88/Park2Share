@@ -28,15 +28,12 @@ class ListYourCarActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
 
-        // Observe the logged-in user
         userViewModel.loggedInUser.observe(this) { user ->
             if (user == null) {
-                // User is not logged in
                 Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             } else {
-                // Use the logged-in user's ID in your API requests
                 setContent {
                     MaterialTheme {
                         BaseDrawerScreen(title = "List Your Car") { paddingValues ->
@@ -58,7 +55,7 @@ class ListYourCarActivity : AppCompatActivity() {
 @Composable
 fun ListYourCarContent(
     paddingValues: PaddingValues,
-    loggedInUserId: Int // Add loggedInUserId as a parameter
+    loggedInUserId: Int
 ) {
     var brand by remember { mutableStateOf("") }
     var model by remember { mutableStateOf("") }
@@ -155,7 +152,7 @@ fun ListYourCarContent(
                 } else {
 
                     val car = mapOf(
-                        "uid" to loggedInUserId.toString(), // Use the logged-in user's ID
+                        "uid" to loggedInUserId.toString(),
                         "brand" to brand,
                         "model" to model,
                         "color" to color,
@@ -166,7 +163,7 @@ fun ListYourCarContent(
                         "isAvailable" to isAvailable.toString()
                     )
 
-                    // Make the API call
+
                     scope.launch {
                         try {
                             val response: Response<Map<String, String>> = withContext(Dispatchers.IO) {
@@ -179,7 +176,7 @@ fun ListYourCarContent(
                                     if (responseBody != null && responseBody["message"] == "Car added successfully") {
                                         Toast.makeText(context, "Car added successfully", Toast.LENGTH_SHORT).show()
 
-                                        // Clear the fields
+
                                         brand = ""
                                         model = ""
                                         color = ""

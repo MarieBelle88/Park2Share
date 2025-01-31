@@ -20,7 +20,6 @@ class MyListingsViewModel : ViewModel() {
     private val _listings = mutableStateListOf<Listing>()
     val listings: List<Listing> get() = _listings
 
-    // ✅ Fetch user listings
     fun fetchListings(userId: Int, context: Context) {
         viewModelScope.launch {
             try {
@@ -58,7 +57,7 @@ class MyListingsViewModel : ViewModel() {
                     _listings.removeAll { it.cid == cid }
                     withContext(Dispatchers.Main) {
                         Toast.makeText(context, "Listing deleted successfully", Toast.LENGTH_SHORT).show()
-                        (context as? AppCompatActivity)?.recreate() // ✅ Refresh activity
+                        (context as? AppCompatActivity)?.recreate()
                     }
                 } else {
                     Toast.makeText(context, "Failed to delete listing: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
@@ -70,4 +69,4 @@ class MyListingsViewModel : ViewModel() {
     }
 
 
-} // ✅ Properly closed ViewModel class
+}

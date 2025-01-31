@@ -24,7 +24,6 @@ fun DrawerContent(onOptionSelected: (String) -> Unit) {
         DrawerItem(label = "List Your Car", onClick = onOptionSelected)
         DrawerItem(label = "My Bookings", onClick = onOptionSelected)
         DrawerItem(label = "My Listings", onClick = onOptionSelected)
-        DrawerItem(label = "My Account", onClick = onOptionSelected)
         DrawerItem(label = "Settings", onClick = onOptionSelected)
     }
 }
@@ -41,31 +40,3 @@ fun DrawerItem(label: String, onClick: (String) -> Unit) {
     )
 }
 
-@Composable
-fun QuickLinksSection() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        QuickLinkCard(title = "List Your Car", icon = R.drawable.ic_launcher_foreground)
-        QuickLinkCard(title = "Search for Cars", icon = R.drawable.ic_launcher_foreground)
-        QuickLinkCard(title = "My Bookings", icon = R.drawable.ic_launcher_foreground)
-    }
-}
-
-@Composable
-fun QuickLinkCard(title: String, icon: Int) {
-    Card(
-        modifier = Modifier
-            .width(100.dp)
-            .height(120.dp),
-        elevation = 4.dp
-    ) {
-        Column(
-            modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = title, style = MaterialTheme.typography.body1)
-        }
-    }
-}

@@ -30,7 +30,6 @@ fun BaseDrawerScreen(
                     "List Your Car" -> navigateToActivity(context, ListYourCarActivity::class.java)
                     "My Bookings" -> navigateToActivity(context, MyBookingsActivity::class.java)
                     "My Listings" -> navigateToActivity(context, MyListingsActivity::class.java)
-                    "My Account" -> navigateToActivity(context, MyAccountActivity::class.java)
                     "Settings" -> navigateToActivity(context, SettingsActivity::class.java)
                 }
                 scope.launch { drawerState.close() }
@@ -46,7 +45,7 @@ fun BaseDrawerScreen(
                             Icon(Icons.Default.Menu, contentDescription = "Menu")
                         }
                     },
-                    modifier = Modifier.statusBarsPadding() // ✅ Fixes top bar overlap issue
+                    modifier = Modifier.statusBarsPadding()
                 )
             },
             content = { paddingValues ->
@@ -55,14 +54,13 @@ fun BaseDrawerScreen(
                         .fillMaxSize()
                         .padding(paddingValues)
                 ) {
-                    content(paddingValues) // Ensure content respects padding
+                    content(paddingValues)
                 }
             }
         )
     }
 }
 
-// Helper function to navigate between activities
 fun navigateToActivity(context: Context, activityClass: Class<*>) {
     val intent = Intent(context, activityClass)
     context.startActivity(intent)

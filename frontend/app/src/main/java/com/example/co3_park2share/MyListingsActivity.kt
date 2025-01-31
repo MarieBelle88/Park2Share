@@ -114,7 +114,6 @@ fun ListingItem(
             ) {
                 Button(onClick = {
                     onDelete()
-                    // Restart the activity to refresh the list
                     val intent = Intent(context, MyListingsActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     context.startActivity(intent)

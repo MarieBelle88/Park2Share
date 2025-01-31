@@ -46,10 +46,8 @@ fun Application.configureRouting() {
                             it[phone] = user["phone"]!!
                         }
                     }
-                    // Return a JSON response
                     call.respond(mapOf("message" to "User added successfully"))
                 } catch (e: Exception) {
-                    // Handle errors and return a JSON response
                     call.respond(mapOf("error" to "An error occurred: ${e.message}"))
                 }
             }
@@ -133,7 +131,6 @@ fun Application.configureRouting() {
                 try {
                     val car = call.receive<Map<String, String>>()
 
-                    // Validate required fields
                     if (car["uid"].isNullOrEmpty() || car["brand"].isNullOrEmpty() || car["model"].isNullOrEmpty() ||
                         car["color"].isNullOrEmpty() || car["plate"].isNullOrEmpty() || car["capacity"].isNullOrEmpty() ||
                         car["location"].isNullOrEmpty() || car["price"].isNullOrEmpty() || car["isAvailable"].isNullOrEmpty()) {
@@ -141,7 +138,6 @@ fun Application.configureRouting() {
                         return@post
                     }
 
-                    // Insert the car into the database
                     transaction {
                         Car.insert {
                             it[uid] = car["uid"]!!.toInt()
@@ -156,10 +152,8 @@ fun Application.configureRouting() {
                         }
                     }
 
-                    // Return a success response
                     call.respond(mapOf("message" to "Car added successfully"))
                 } catch (e: Exception) {
-                    // Handle errors
                     call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "An error occurred: ${e.message}"))
                 }
             }
@@ -174,7 +168,6 @@ fun Application.configureRouting() {
 
                     val updatedData = call.receive<Map<String, String>>()
 
-                    // Validate required fields
                     val requiredFields = listOf("uid", "brand", "model", "color", "plate", "capacity", "location", "price", "isAvailable")
                     val missingFields = requiredFields.filter { it !in updatedData }
                     if (missingFields.isNotEmpty()) {
@@ -182,7 +175,6 @@ fun Application.configureRouting() {
                         return@put
                     }
 
-                    // Update the car in the database
                     transaction {
                         Car.update({ Car.cid eq cid }) {
                             it[uid] = updatedData["uid"]!!.toInt()
@@ -199,7 +191,6 @@ fun Application.configureRouting() {
 
                     call.respond("Car updated successfully")
                 } catch (e: Exception) {
-                    // Log the error for debugging
                     println("Error updating car: ${e.message}")
                     call.respond(HttpStatusCode.InternalServerError, "Failed to update car: ${e.message}")
                 }
@@ -343,7 +334,6 @@ fun Application.configureRouting() {
                 try {
                     val booking = call.receive<Map<String, String>>()
 
-                    // Validate required fields
                     val requiredFields = listOf("cid", "uid")
                     val missingFields = requiredFields.filter { it !in booking }
                     if (missingFields.isNotEmpty()) {
@@ -351,7 +341,6 @@ fun Application.configureRouting() {
                         return@post
                     }
 
-                    // Check if the car is already booked
                     val isCarAvailable = transaction {
                         Car.select { (Car.cid eq booking["cid"]!!.toInt()) and (Car.isAvailable eq true) }
                             .empty()
@@ -362,14 +351,12 @@ fun Application.configureRouting() {
                         return@post
                     }
 
-                    // Insert the booking
                     transaction {
                         Booking.insert {
                             it[cid] = booking["cid"]!!.toInt()
                             it[uid] = booking["uid"]!!.toInt()
                         }
 
-                        // Update the car's availability to false
                         Car.update({ Car.cid eq booking["cid"]!!.toInt() }) {
                             it[isAvailable] = false
                         }
@@ -421,7 +408,6 @@ fun Application.configureRouting() {
 
                     val updatedData = call.receive<Map<String, String>>()
 
-                    // Validate required fields
                     val requiredFields = listOf("cid", "uid")
                     val missingFields = requiredFields.filter { it !in updatedData }
                     if (missingFields.isNotEmpty()) {
@@ -429,7 +415,6 @@ fun Application.configureRouting() {
                         return@put
                     }
 
-                    // Fetch the current booking
                     val currentBooking = transaction {
                         Booking.select { Booking.bid eq bid }
                             .firstOrNull()
@@ -442,21 +427,17 @@ fun Application.configureRouting() {
 
                     val currentCid = currentBooking[Booking.cid]
 
-                    // Update the booking
                     transaction {
                         Booking.update({ Booking.bid eq bid }) {
                             it[cid] = updatedData["cid"]!!.toInt()
                             it[uid] = updatedData["uid"]!!.toInt()
                         }
 
-                        // Update the car's availability
                         if (currentCid != updatedData["cid"]!!.toInt()) {
-                            // Set the old car's availability to true
                             Car.update({ Car.cid eq currentCid }) {
                                 it[isAvailable] = true
                             }
 
-                            // Set the new car's availability to false
                             Car.update({ Car.cid eq updatedData["cid"]!!.toInt() }) {
                                 it[isAvailable] = false
                             }
@@ -477,7 +458,6 @@ fun Application.configureRouting() {
                         return@delete
                     }
 
-                    // Fetch the car ID associated with the booking
                     val cid = transaction {
                         Booking.select { Booking.bid eq bid }
                             .firstOrNull()
@@ -489,11 +469,9 @@ fun Application.configureRouting() {
                         return@delete
                     }
 
-                    // Delete the booking
                     transaction {
                         Booking.deleteWhere { Booking.bid eq bid }
 
-                        // Update the car's availability to true
                         Car.update({ Car.cid eq cid }) {
                             it[isAvailable] = true
                         }

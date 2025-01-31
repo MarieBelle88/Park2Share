@@ -19,28 +19,24 @@ import retrofit2.Response
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private val userViewModel: UserViewModel by viewModels() // ViewModel instance
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
 
-        // Initialize View Binding
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Check if user is already logged in
         val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val uid = sharedPreferences.getInt("uid", -1)
 
         if (uid != -1) {
-            // User is already logged in, redirect to HomePage
             startActivity(Intent(this, HomePageActivity::class.java))
             finish()
             return
         }
 
-        // Set click listener on the Log In button
         binding.btnLoginSubmit.setOnClickListener {
             val email = binding.etLoginEmail.text.toString()
             val password = binding.etLoginPassword.text.toString()
@@ -64,7 +60,6 @@ class LoginActivity : AppCompatActivity() {
                     if (response.isSuccessful && response.body() != null) {
                         val user = response.body()!!
 
-                        // Save the user's ID in SharedPreferences
                         val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
                         sharedPreferences.edit()
                             .putInt("uid", user.uid)
@@ -72,7 +67,6 @@ class LoginActivity : AppCompatActivity() {
 
                         Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
 
-                        // Navigate to HomePageActivity
                         val intent = Intent(this@LoginActivity, HomePageActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)

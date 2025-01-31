@@ -81,3 +81,7 @@ Once the backend is running, you can:
 
 - Test the endpoints using tools like Postman or cURL.
 - Endpoints (to be added).
+
+### Frontend
+- After activating it (check the frontend readme file):
+  - You can use these logins (or sign up): **email**: test@gmail.com , **password**: whatcouldthisbe123

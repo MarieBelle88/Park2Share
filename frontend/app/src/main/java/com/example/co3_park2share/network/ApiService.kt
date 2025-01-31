@@ -30,6 +30,22 @@ interface ApiService {
     @GET("/cars/{cid}")
     suspend fun getCarDetails(@Path("cid") cid: Int): Response<Listing>
 
+    @GET("bookings/user/{uid}")
+    suspend fun getUserBookings(@Path("uid") uid: Int): Response<List<Booking>>
+
+    @DELETE("bookings/{bid}")
+    suspend fun deleteBooking(@Path("bid") bid: Int): Response<Void>
+
+
+    @POST("bookings")
+    suspend fun createBooking(@Body booking: Map<String, Int>): Response<String>
+
+    @GET("cars")
+    suspend fun getAvailableCars(): Response<List<Listing>>
+
+    @DELETE("users/{uid}")
+    suspend fun deleteUser(@Path("uid") userId: Int): Response<Unit>
+
 
 
 

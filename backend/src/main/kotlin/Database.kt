@@ -40,14 +40,14 @@ fun initDatabase() {
             User.insert {
                 it[firstName] = "Martin"
                 it[lastName] = "Mirchevski"
-                it[email] = "m.mirchevski@student.xu-university.de"
+                it[email] = "test@gmail.com"
                 it[password] = "whatcouldthisbe123"
                 it[phone] = "+359878884010"
             }
             User.insert {
                 it[firstName] = "Marie-Belle"
                 it[lastName] = "Khaddage"
-                it[email] = "m.khaddage@@student.xu-university.de"
+                it[email] = "m.khaddage@student.xu-university.de"
                 it[password] = "password567"
                 it[phone] = "+49123456789"
             }

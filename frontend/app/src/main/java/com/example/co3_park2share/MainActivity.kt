@@ -69,7 +69,6 @@ class MainActivity : AppCompatActivity() {
         titleText.text = slide.title
         descriptionText.text = slide.description
 
-        // Show buttons only on the last slide
         if (currentSlide == slides.size - 1) {
             authButtonsLayout.visibility = android.view.View.VISIBLE
             nextButton.visibility = android.view.View.GONE
