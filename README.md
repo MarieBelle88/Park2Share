@@ -43,3 +43,7 @@ Park2Share is a revolutionary application that transforms airport parking into a
 - Run the app
 
 For the backend deployment  check the README file inside the backend directory
+
+- After activating it 
+  - You can use these logins (or sign up): **email**: test@gmail.com , **password**: whatcouldthisbe123
+
